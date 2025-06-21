@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>XOXO</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/833/833472.png" type="image/png" />
+
+    <style>
+        body {
+            background: red;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 50px;
+            color: #ffffff;
+            animation: fadeIn 2s ease;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .hidden-message {
+            margin-top: 20px;
+            font-size: 1.3em;
+            color: white;
+            opacity: 0;
+            text-align: justify;
+            transition: opacity 0.6s ease;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px 30px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hidden-message.show {
+            opacity: 1;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #fff;
+            color: #ff6f91;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background: #ffe4e1;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff6f91;
+            font-size: 24px;
+            animation: flutuar 6s linear infinite;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        @keyframes flutuar {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes mover {
+            0% {
+                transform: scale(1) translate(0, 0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(3) translate(calc(var(--random-x, 0) * 1px), calc(var(--random-y, 0) * 1px));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="hearts-container"></div>
+
+    <div class="card">
+        <h1>💖 Para Ariana 💖</h1>
+        <p>Você é incrível e merece todo o meu carinho!</p>
+        <button onclick="mostrarMensagem()">Clique aqui</button>
+    </div>
+
+    <div class="hidden-message" id="mensagem"></div>
+    <div class="hidden-message" id="parabens"></div>
+
+    <audio id="som-brabo" src="https://www.myinstants.com/media/sounds/aniversario-parabens.mp3" preload="auto"></audio>
+    <script>
+
+        const heartsContainer = document.getElementById('hearts-container');
+
+        function mostrarMensagem() {
+            const mensagem = document.getElementById('mensagem');
+            const parabens = document.getElementById('parabens');
+            if (mensagem.classList.contains('show') || parabens.classList.contains('show')) {
+                mensagem.classList.remove('show');
+                parabens.classList.remove('show');
+            } else {
+                document.getElementById('som-brabo').play();
+                iniciarConfetes();
+                mensagem.innerHTML = `Você é a razão dos meus melhores sorrisos, a inspiração dos meus dias mais felizes.<br><br>
+Obrigado por ser essa pessoa incrível, doce e forte que eu tenho a sorte de amar.<br><br>
+Te amo mais do que palavras podem dizer!<br>`;
+                mensagem.classList.add('show');
+                parabens.innerHTML = `<p style="text-align: center; font-weight: bold; font-size: 1.2em;">Feliz aniversário XUXU!</p>`;
+                parabens.classList.add('show');
+            }
+        }
+
+        function criarCoracao() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            const duration = 3000;
+            heart.style.animationDuration = duration + 'ms';
+            heart.innerText = '❤️';
+
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => {
+                const randomX = (Math.random() - 0.5) * 200;
+                const randomY = 100;
+
+                heart.style.setProperty('--random-x', randomX);
+                heart.style.setProperty('--random-y', randomY);
+
+                heart.style.animation = 'mover 1.20s forwards';
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 800);
+            }, duration);
+        }
+
+        setInterval(criarCoracao, 500);
+
+        const coresConfetes = ['#FFC700', '#FF0000', '#2E3192', '#41BBC7', '#7F00FF', '#FF6F91', '#FFD700'];
+        const confetesContainer = document.getElementById('hearts-container');
+
+        function criarConfete() {
+            const confete = document.createElement('div');
+            confete.style.position = 'absolute';
+            confete.style.width = (5 + Math.random() * 5) + 'px';
+            confete.style.height = confete.style.width;
+            confete.style.backgroundColor = coresConfetes[Math.floor(Math.random() * coresConfetes.length)];
+            confete.style.left = Math.random() * window.innerWidth + 'px';
+            confete.style.top = '-10px';
+            confete.style.borderRadius = '2px';
+            confete.style.opacity = 0.9;
+            confete.style.pointerEvents = 'none';
+            confete.style.zIndex = 1000;
+
+            const duracao = 2000 + Math.random() * 2000;
+            confete.style.transition = `transform ${duracao}ms ease-out, opacity ${duracao}ms ease-out`;
+
+            confetesContainer.appendChild(confete);
+
+            setTimeout(() => {
+                const movimentoX = (Math.random() - 0.5) * 100;
+                confete.style.transform = `translate(${movimentoX}px, 100vh) rotate(${Math.random() * 360}deg)`;
+                confete.style.opacity = 0;
+            }, 20);
+
+            setTimeout(() => {
+                confete.remove();
+            }, duracao + 50);
+        }
+
+        let intervaloConfetes;
+
+        function iniciarConfetes() {
+            if (intervaloConfetes) return;
+
+            intervaloConfetes = setInterval(criarConfete, 100);
+
+            setTimeout(() => {
+                clearInterval(intervaloConfetes);
+                intervaloConfetes = null;
+            }, 5000);
+        }
+    </script>
+</body>
+
+</html>
